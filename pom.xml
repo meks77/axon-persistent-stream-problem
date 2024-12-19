@@ -15,6 +15,7 @@
         <quarkus.platform.version>3.17.4</quarkus.platform.version>
         <skipITs>true</skipITs>
         <surefire-plugin.version>3.5.0</surefire-plugin.version>
+        <quarkus.axon.extension.version>0.1.0-RC4</quarkus.axon.extension.version>
     </properties>
 
     <dependencyManagement>
@@ -35,18 +36,45 @@
             <artifactId>quarkus-arc</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-rest</artifactId>
+            <groupId>at.meks.quarkiverse.axonframework-extension</groupId>
+            <artifactId>quarkus-axon-server</artifactId>
+            <version>${quarkus.axon.extension.version}</version>
         </dependency>
+        <!-- Enable this dependencies to run with persistent stream-->
+<!--        <dependency>-->
+<!--            <groupId>at.meks.quarkiverse.axonframework-extension</groupId>-->
+<!--            <artifactId>quarkus-axon-persistent-stream-eventprocessor</artifactId>-->
+<!--            <version>${quarkus.axon.extension.version}</version>-->
+<!--        </dependency>-->
+        <!-- persistent stream dependencies end -->
+        <!-- Enable this dependencies to run with tracking processor-->
+        <dependency>
+            <groupId>at.meks.quarkiverse.axonframework-extension</groupId>
+            <artifactId>quarkus-axon-tracking-eventprocessor</artifactId>
+            <version>${quarkus.axon.extension.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>at.meks.quarkiverse.axonframework-extension</groupId>
+            <artifactId>quarkus-axon-tokenstore-jdbc</artifactId>
+            <version>${quarkus.axon.extension.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-agroal</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-jdbc-mariadb</artifactId>
+        </dependency>
+        <!-- tracking event processor end -->
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-junit5</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>io.rest-assured</groupId>
-            <artifactId>rest-assured</artifactId>
-            <scope>test</scope>
+            <groupId>org.awaitility</groupId>
+            <artifactId>awaitility</artifactId>
         </dependency>
     </dependencies>
 
