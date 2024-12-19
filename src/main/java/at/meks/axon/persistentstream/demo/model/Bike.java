@@ -27,4 +27,9 @@ public class Bike {
         this.id = event.id();
     }
 
+    @CommandHandler
+    void rentBike(Api.RentBikeCommand command) {
+        apply(new Api.BikeRentedEvent(command.id()));
+    }
+
 }

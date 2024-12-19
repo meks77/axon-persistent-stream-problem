@@ -4,6 +4,7 @@ import at.meks.axon.persistentstream.demo.projection1.Projection1_1;
 import at.meks.axon.persistentstream.demo.projection1.Projection1_2;
 import at.meks.axon.persistentstream.demo.projection2.Projection2_1;
 import at.meks.axon.persistentstream.demo.projection2.Projection2_2;
+import at.meks.axon.persistentstream.demo.projection3.RentsProjection;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
 import org.axonframework.commandhandling.gateway.CommandGateway;
@@ -23,22 +24,25 @@ class EventHandlingTest {
     @Inject Projection1_2 projection1_2;
     @Inject Projection2_1 projection2_1;
     @Inject Projection2_2 projection2_2;
+    @Inject RentsProjection rentsProjection;
 
 
     @Test
     void testEventhandlerReceivedEvent() {
-        commandGateway.sendAndWait(new Api.CreateBikeCommand(UUID.randomUUID().toString()));
-
-        assertThat(() -> assertTrue(projection1_1.isEventReceived()));
-        assertThat(() -> assertTrue(projection1_2.isEventReceived()));
-        assertThat(() -> assertTrue(projection2_1.isEventReceived()));
-        assertThat(() -> assertTrue(projection2_2.isEventReceived()));
+        String id = UUID.randomUUID().toString();
+        commandGateway.sendAndWait(new Api.CreateBikeCommand(id));
+        commandGateway.sendAndWait(new Api.RentBikeCommand(id));
+        assertAll(() -> assertThat(() -> assertTrue(projection1_1.isEventReceived())),
+                  () -> assertThat(() -> assertTrue(projection1_2.isEventReceived())),
+                  () -> assertThat(() -> assertTrue(projection2_1.isEventReceived())),
+                  () -> assertThat(() -> assertTrue(projection2_2.isEventReceived())),
+                  () -> assertThat(() -> assertTrue(rentsProjection.isEventReceived())));
     }
 
     private void assertThat(Runnable assertion) {
         await().pollDelay(Duration.ofMillis(100))
-                .atMost(Duration.ofSeconds(5))
-                .pollInterval(Duration.ofMillis(100))
+               .atMost(Duration.ofSeconds(5))
+               .pollInterval(Duration.ofMillis(100))
                .untilAsserted(assertion::run);
     }
 }
